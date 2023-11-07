@@ -57,3 +57,66 @@
       - 将所有事务都移交到该内容下面
     - 集结点：添加——>定时器——>synchronizing Timer——>选择集合的线程数量
     - 参数化
+
+```java
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By;
+
+@SuppressWarnings("unused")
+public class Example {
+
+    // Mooctest Selenium Example
+
+
+    // <!> Check if selenium-standalone.jar is added to build path.
+
+    public static void test(WebDriver chromeDriver) {
+        // TODO Test script
+        // eg:driver.get("https://www.baidu.com/")
+        // eg:driver.findElement(By.id("wd"));
+
+
+    	try {
+
+        	chromeDriver.get("");
+        	chromeDriver.manage().window().maximize();
+        	chromeDriver.findElement(By.id("")).click();
+        	Thread.sleep(1500);
+        	chromeDriver.findElement(By.linkText("")).click();
+        	Thread.sleep(1500);
+        	chromeDriver.findElement(By.xpath("")).click();
+        	Thread.sleep(1500);
+        	chromeDriver.findElement(By.cssSelector("")).click();
+        	Thread.sleep(1500);
+        	chromeDriver.findElement(By.name("")).click();
+        	Thread.sleep(1500);
+        	chromeDriver.findElement(By.className("")).click();
+        	Thread.sleep(1500);
+        	chromeDriver.switchTo().window(chromeDriver.getWindowHandles().toArray()[6].toString());
+        	Thread.sleep(1500);
+
+
+
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+
+
+    }
+
+    public static void main(String[] args) {
+        // Run main function to test your script.
+        WebDriver chromeDriver = new ChromeDriver();
+        try { test(chromeDriver); }
+        catch(Exception e) { e.printStackTrace(); }
+        finally { chromeDriver.quit(); }
+    }
+
+}
+
+```
