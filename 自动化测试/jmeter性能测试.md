@@ -94,6 +94,8 @@ public class Example {
         	Thread.sleep(1500);
         	chromeDriver.findElement(By.className("")).click();
         	Thread.sleep(1500);
+          //如果出现需要跳转但是不需要关闭的情况直接跳转即可
+          //关掉页面的情况也是直接进行就可以.close()
         	chromeDriver.switchTo().window(chromeDriver.getWindowHandles().toArray()[6].toString());
         	Thread.sleep(1500);
 
