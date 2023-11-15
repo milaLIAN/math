@@ -1,0 +1,675 @@
+- 通用的编程概念
+
+  - 变量与可变性
+
+    - 声明变量使用**let**关键字
+    - 默认情况下，变量是不可变(immutable)
+
+    ```rust
+    let x = 5;
+    print!("The value of x is {}", x);
+    // x=6 报错
+    ```
+
+    - 在声明的时候，在变量前面加上 mut，变成可变变量
+
+    ```rust
+    let mut x = 5;
+    println!("The value of x is {}", x);
+    x = 6;
+    println!("The value of x is {}", x);
+    ```
+
+  - 常量：绑定值以后不可变
+
+    - 不可以使用 mut,常量永远不变
+    - 声明变量使用 const 关键字,它的类型必须编著
+    - 常量可以在任何作用域中声明，包括全局作用域
+    - 常量只可以绑定到常量表达式，无法绑定到函数的调用结果
+    - **命名方式：全大写字母并且每个单词之间用下划线分开**
+
+      ```rust
+      const MAX_X: i32 = 100;
+      println!("The value of x is {}", MAX_X);
+      ```
+
+  - shadowing(隐藏)
+
+    ```rust
+    let x = 5;
+    let x = x + 1;
+    //在后续的代码中这个变量名代表的就是新的变量
+    ```
+
+    - 使用 let 声明的同名新变量，它的类型可以和之前不一样
+
+      ```rust
+      let space=" ";
+      let space=space.len();
+      println!(space);
+
+      //结果为4
+      ```
+
+- 复合类型
+
+  - tuple
+
+    - tuple 可以将多个类型的多个值放在一个类型里
+    - tuple 的长度是固定的，一旦声明就无法改变
+    - 创建方式
+
+      ```rust
+      //在小括号中，值用逗号隔开
+      let tup:(i32,f64,u8)=(200,4.5,1);
+
+      ```
+
+    - 获取元素值
+
+      ```rust
+      let tup:(i32,f64,u8)=(200,4.5,1)
+      let(x,y,z)=tup;
+      print!("{},{},{}",x,y,z);
+      println("{}，{}，{}",tup.0,tup.1,tup.2);
+      ```
+
+  - 数组
+
+    - 存放的数据类型相同
+    - 一旦声明，长度不可变更
+    - 声明
+
+      ```rust
+      //在中括号中，使用逗号分开
+      //让数据存储在栈中，使用数组
+      let x:[i32;5]=[1,2,3,4];
+      let a=[3,5]//5个3
+      ```
+
+- 函数
+
+  - 函数名称使用小写,\_分开,fn 开头
+  - 语句就是使用 let 形式，没有返回值
+
+    ```rust
+    let x=(let y=5);
+
+    let y={
+        let x=1;
+        x+1 //不加;的时候就是表达式，所以具有返回值
+        //加上;之后，就是句子，没有返回值
+    }
+    ```
+
+  - 返回值
+    - -->指明返回值类型
+    - 最后的表达式就是返回值
+    - 如果需要提前返回，使用 return 返回值
+
+- if 表达式
+
+  - if 是表达式,因此可以使用 let
+
+    ```rust
+    let number = if condition {"5"} else {"6"}
+    ```
+
+  - if {} else{}里面的表达式类型必须一样
+
+- 循环
+
+  - loop 循环
+
+    - 一直在循环，知道外界喊停 break
+
+      ```rust
+      fn main() {
+            let mut number = 0;
+            let rusult = loop {
+            number += 1;
+
+            if number == 10 {
+                break number * 2;
+                }
+            };
+
+            println!("The result is {}", rusult);
+        }
+        //loop{};
+      ```
+
+  - while 循环
+    - while{}
+  - for 循环
+
+    ```rust
+    let a=[1,2,3,4,5];
+    for element in a.iter(){
+        println!("The value id {}",element);
+    }
+    ```
+
+  - range
+
+    - 指定一个开始数字和一个结束数字
+    - range 可以生成它们之间的数字
+    - rev 方法可以反转 range
+
+      ```rust
+      for number in (1..4).rev() {
+        println!("{}", number);
+      }
+      ```
+
+- 所有权
+
+  - stack
+    - 存储固定大小的数据
+    - 可以把指针存放在 stack 上，但是如果需要实际数据，需要对指针进行定位
+  - heap
+    - 分配空间需要空间
+
+- String 类型
+
+  - 创建 String 类型的值
+
+    ```rust
+    let s=String::from("hello");
+    //::表示from是String类型下面的函数
+    s.push_str(",world!")
+    println(s);
+    ```
+
+  - move
+
+    ```rust
+    let s1 = String::from("hello");
+    let s2 = s1;
+    //将值得所有权移动给了s2，所以无法打印s1
+    // println!("{}", s1);
+    println!("{}", s2);
+    ```
+
+  - clone
+
+    ```rust
+    let s1 = String::from("hello");
+    let s2 = s1.clone();
+
+    println!("{}", s1);
+    println!("{}", s2);
+    ```
+
+  - 具有 copy trait 的类型
+    - 任何简单标量的组合类型都是 copy 的
+    - 任何需要分配内存或某种资源的都不是 copy
+    - 所有整数类型、bool、char、所有浮点类型
+    - copy 之后还能够使用
+
+- 所有权与函数
+
+  - 引用
+
+    ```rust
+    fn main() {
+    let s1 = String::from("hello");
+    let len = calculate_len(&s1);
+    println!("{}", s1);
+     }
+
+    fn calculate_len(s: &String) -> usize {
+        //使用引用，使用值但是不会移交所有权
+        //但是不能在函数中对其进行更改
+        //如果需要更改，添加&mut
+        return s.len();
+     }
+    ```
+
+    - 在特定作用域中，对某一块数据，只能有一个引用-
+    - 即同一作用域和同一时间不可以拥有两个引用
+    - 不可以拥有一个可变一个不可变的
+
+- 字符串切片
+
+  - 不持有所有权
+
+    ```rust
+    let s1 = String::from("hello world");
+    let hello = &[0..5];
+    let world = &[6..11];
+    ```
+
+- struct -定义
+
+  ```rust
+  struct User {
+    username: String,
+    email: String,
+    sign_in_count: u64,
+    active: bool,
+    //末尾符号一定是,
+    }
+
+    fn main() {
+    //在初始化器中不能缺少变量
+    //初始化容器let{};
+    //最后的结尾一定时,
+    let mut User = User {
+        email: String::from("abcd@126.com"),
+        username: String::from("Nike"),
+        active: true,
+        sign_in_count: 123456,
+    };
+    }
+
+  ```
+
+  - 当结构体定义成 mut 类型时，整个结构体都是 mut
+  - 赋值方法.
+  - tuple struct
+  - Unit_Like struct 没有任何字段，里面不存储数据
+  - struct 所有权
+
+```rust
+  struct Rectangle {
+    length: u32,
+    width: u32,
+}
+
+fn main() {
+    let mut Rectangle = Rectangle {
+        length: 32,
+        width: 100,
+    };
+
+    println!("{}", area(&Rectangle));
+}
+
+fn area(rect: &Rectangle) -> u32 {
+    rect.width * rect.length
+}
+
+```
+
+- struct 方法
+
+```rust
+    struct Rectangle {
+    length: u32,
+    width: u32,
+}
+
+impl Rectangle {
+    fn area(&self) -> u32 {
+        self.width * self.length
+    }
+    fn can_hold(&self, other: &Rectangle) -> bool {
+        self.width > other.width && self.length > other.length
+    }
+
+    //关联函数
+    fn Square(size: u32) -> Rectangle {
+        Rectangle {
+            length: (size),
+            width: (size),
+        }
+    }
+}
+fn main() {
+    //关联函数的调用
+    let s = Rectangle::Square(20);
+
+    let mut Rectangle = Rectangle {
+        length: 32,
+        width: 100,
+    };
+
+    println!("{}", Rectangle.area());
+}
+
+```
+
+- 枚举
+
+  - enum
+
+- option
+
+  - rust 中没有 NULL 概念
+    - Option<i32>=None
+
+- 内存安全
+
+  - char --> 32 位
+  - 字符串以 UTF-8 编码存储为字节数组，字符通常只占有一个字节字节，除非超出范围，才会需要 4 个字节
+  - 三原则：所有权、借用和生命周期
+    - String-->地址、容量、长度(24)
+    - 字符串切片-->地址、长度(16)
+
+- trait 特征
+
+  - 包含泛型的特征----**特征区间**
+
+    ```rust
+    fn add_thing<T: std::ops::Add>(frs: T, sed: T) {
+      let _ = frs + sed;
+    }
+    //add_thing<T>是报错，不知道到底是什么类型
+    //std::ops::Add相当于给代码加上了trait bound
+    ```
+
+  - 使用+将特征组合成区间
+
+    ```rust
+    trait
+    ```
+
+  - 标准库特征
+
+    ```rust
+    impl<T:Add<T,Output=T>> Add for Complex<T>{
+      //Add<>表示复数的实部和虚部都需要满足上述的条件
+      type Output=Complex<T>;
+    }
+    ```
+
+- 生命周期
+
+  - {}、&指针
+
+    ```rust
+    fn longest(x: &str, y: &str) -> &str {
+      if x.len() > y.len() {
+          x
+      } else {
+          y
+      }
+    }
+    fn main() {
+      //编译器无法推断出返回值的类型是根据x还是根据y
+      //当函数的参数只有一个，能够推断出返回值类型
+      //所以编译器可以推断出生命周期
+      let string1 = String::from("abcd");
+      let string2 = "xyz";
+      let result = longest(string1.as_str(), string2);
+     }
+
+     //修改代码
+     fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+     //使用'字母作为生命周期标识符
+        if x.len() > y.len() {
+            x
+        } else {
+            y
+        }
+       }
+       //生命周期标识符必须保持一致
+       //显式指定标识符的生命周期
+
+    //string2的生命周期不够长
+    //修改直接将string2的声明挪到{}前面即可
+    let string1 = String::from("long string is long");
+    let result;
+    {
+        let string2 = String::from("xyz");
+        result = longest(string1.as_str(), string2.as_str());
+    }
+    ```
+
+  - static 修饰的变量在程序运行区间生命周期都存在
+
+- 错误处理
+
+  - 讲了 c 的错误
+  - 可以恢复的 error 使用 Result<T,std::io::Error>
+  - 不可以恢复的 error 使用 unwrap() and expect()-->panic!
+  - null pointer 使用 option<>
+
+  - 使用枚举 enum
+
+    ```rust
+    //错误返回值
+    enum Result<T,E>{
+      Ok(T);
+      ERR(E);
+    }
+    ```
+
+- ? operator
+
+  ```rust
+  Fileopen(filename)?.read_to_string(&mut a)?;
+  //注意返回值类型
+  //返回ok时候设置该值
+  //返回error--> 停止/传播该错误
+  //完整代码
+  fn read_file
+  ```
+
+#### HashMap
+
+##### 相关操作
+
+```rust
+//创建
+    use std::collections::HashMap;
+
+    let mut scores = HashMap::new();
+
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
+
+    let team_name = String::from("Blue");
+    let score = scores.get(&team_name).copied().unwrap_or(0);
+
+    //遍历打印
+    for (key, value) in &scores {
+        println!("{key}: {value}");
+    }
+```
+
+#### 函数式编程
+
+##### 闭包
+
+- 类似函数的构造，可以存储在变量中
+- 概念
+  - rust 的闭包是匿名函数
+  - 可以将它们保存在变量中或者将它们作为参数传递给其他函数
+  - 可以在一个地方创建闭包，然后在不同的上下文中调用闭包
+  - 闭包可以捕获其定义的作用域的值
+- 闭包的上下文
+
+  ```rust
+  fn  add_one_v1   (x: u32) -> u32 { x + 1 }
+  let add_one_v2 = |x: u32| -> u32 { x + 1 };
+  let add_one_v3 = |x|             { x + 1 };
+  let add_one_v4 = |x|               x + 1  ;
+  ```
+
+- 闭包的类型推断
+
+  ```rust
+  let example_closure=|x|x;
+  let s= example_closure(String::from("hello"));
+  let n=example_closure(5);
+  //第一个传递的时候String类型传入
+  //第二次传入i32类型的时候编译器无法推断出来真实的类型
+
+  //编译错误信息
+  //5 |     let n = example_closure(5);
+  //|             --------------- ^- help: try using a conversion method: `.to_string()`
+  //|             |               |
+  //|             |               expected `String`, found integer
+  //|             arguments to this function are incorrect
+  ```
+
+- 捕获引用或转移所有权
+  - 可变借用
+
+```rust
+fn main() {
+    //可变借用
+    let mut list = vec![1, 2, 3];
+    println!("Before defining closure: {:?}", list);
+
+    let mut borrows_mutably = || list.push(7);
+
+    borrows_mutably();
+    println!("After calling closure: {:?}", list);
+}
+```
+
+- 不可变借用
+- 接管所有权
+
+- 闭包的类型
+  - FnOnce 适用于可被调用一次的闭包。所有闭包都至少实现了这一特性，因为所有闭包都可以被调用。将捕获值移出其主体的闭包只能实现 FnOnce，而不能实现其他 Fn 特性，因为它只能被调用一次。
+  - FnMut 适用于不将捕获值移出其主体，但可能会对捕获值进行变异的闭包。这些闭包可以被调用多次。
+  - Fn 适用于不将捕获值移出其主体、不更改捕获值的闭包，以及不从其环境中捕获任何内容的闭包。这些闭包可以被多次调用，而不会改变其环境，这在并发多次调用闭包等情况下非常重要。
+
+##### 迭代器
+
+- 处理一系列元素的方法
+- 任务：遍历每个项，确定停止的条件
+
+  ```rust
+    let v1 = vec![1, 2, 3];
+    //迭代器次数需要进行修改
+    //因此是一个可变的变量
+    let mut v1_iter = v1.iter();
+    for val in v1_iter {
+      println!("Got: {}", val);
+    }
+  ```
+
+- 获取迭代器 vec 中的元素
+
+```rust
+
+fn iterator_demonstration() {
+let v1 = vec![1, 2, 3];
+
+    let mut v1_iter = v1.iter();
+
+    let total = v1_iter.sum();
+    //判断两个表达式是否相等
+    assert_eq!(v1_iter.next(), Some(&1));
+    assert_eq!(v1_iter.next(), Some(&2));
+    assert_eq!(v1_iter.next(), Some(&3));
+    assert_eq!(v1_iter.next(), None);
+
+}
+
+```
+
+- 迭代器
+
+  - 不可变引用上创建 iter()
+  - 创建的迭代器上获取所有权 into_iter()
+  - 迭代可变的引用 iter_mut()
+
+- 消耗迭代器的方法
+  - next()
+  - sum()
+    - 取得迭代器的所有权
+    - 反复调用 next，遍历所有元素
+- 迭代器相关操作
+
+  ```rust
+  let v2: Vec<_> = v1.iter().map(|x| x + 1).collect();
+  //会输出vec+1的形式
+  v1.iter().map(|x| x + 1);
+  //返回map的原来形式
+  ```
+
+#### I/O 项目
+
+- 读取文件
+
+```rust
+use std::env;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    let query = &args[1];
+    let file_path = &args[2];
+
+    println!("Searching for {}", query);
+    println!("In file {}", file_path);
+    //cargo run -- test sample.txt
+    //使用这个命令即可获得读取的文件
+}
+```
+
+- 项目重构与关注点分离
+
+  - 将 main 与其他函数进行分离，即封装
+  - 组合配置值 - 返回元组的时候读取可能不便，因此最好返回一个结构体
+
+    ```rust
+    struct Config{
+    query:String,
+    file_path:STring,
+    }
+
+          fn parser_config (args: &[String]) -> Config {
+        let query = args[1].clone();
+        let file_path = args[2].clone();
+
+        Config { query, file_path }
+
+    }
+    ```
+
+##### 智能指针
+
+- Box<T>
+  - 数据存储在堆内存上，而不是栈内存上
+  - 具有 drop 属性，<T>值退出作用域时，指向的堆数据也会被清理。
+  - Deref 特性，允许将方框<T>值视为引用
+
+```rust
+struct Node {
+    value: i32,
+    next: &Node,
+}
+//加上&之后仍然会报错，报错原因是缺少生命周期
+
+struct Node {
+    value: i32,
+    next: Node,
+}
+//---- recursive without indirection
+//递归的next，所以编译器无法推断出来真实的类型
+```
+
+```rust
+struct Node {
+    value: i32,
+    next: Option<Box<Node>>,
+    //option里面可以是指针，也可以是None
+}
+//使用Box的方式使其变成智能指针
+//智能指针可以自动销毁
+
+fn main() {
+    let node1 = Node {
+        value: 1,
+        next: None,
+    };
+
+    let node2 = Node {
+        value: 2,
+        next: Some(Box::new(node1)),
+    };
+
+    // 使用 Option 包装 Node，可以很容易地插入和移动节点
+    let node3 = Node {
+        value: 3,
+        next: Some(Box::new(node2)),
+    };
+}
+```
