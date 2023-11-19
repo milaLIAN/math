@@ -84,3 +84,67 @@ if __name__ == '__main__':
     print(result)
 
 ```
+
+##### 栈相关
+
+- 匹配括号
+
+> 普通情况：
+> 输入的括号中只有()和空格，没有其他的东西
+
+```python
+from pythonds.basic import Stack
+
+# 当输入是(时，push()栈中
+# 当输入时)时，pop()出栈
+def parChecker(symbolString):
+    s = Stack()
+    balence = True
+    index = 0
+    while index<len(symbolString) and balence:
+        symbol = symbolString[index]
+        if symbol=="(":
+            s.push(symbol)
+        else:
+            if s.isEmpty():
+                balence = False
+            else:
+                s.pop()
+        index = index + 1
+    if balence and s.isEmpty():
+        return True
+    else:
+        return False
+
+if __name__ == '__main__':
+    str = input("please input the string:")
+    print(parChecker(str))
+
+```
+
+- 进制转换
+
+  - 思路
+    - 十进制的数字除以 目标进制 之后获得的余数不断进入栈
+    - 之后将十进制进行除以目标进制
+    - 如果获得的栈不为空，那么将栈中的元素弹出
+  - 代码如下：
+
+    ```python
+    def div(num):
+        result = Stack()
+        while num>0:
+            res = num % 2
+            result.push(res)
+            num // 2
+            # 使得num最后的值不是float类型
+
+        # 将最后的结果进行返回
+        # 使用string类型
+        ress = ""
+        while not result.isEmpty():
+            ress = ress + result.pop()
+
+        return ress
+
+    ```
