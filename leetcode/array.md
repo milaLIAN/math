@@ -148,3 +148,43 @@ if __name__ == '__main__':
         return ress
 
     ```
+
+- 队列
+
+  - 使用两个栈形成队列
+    - 其中一个栈用于队列出，一个栈用于队列进
+    - 其中这两个栈内的数据顺序正好相反
+
+  ```python
+  class MyQueue(object):
+    def __init__(self):
+        # push
+        self.stack1 = []
+        # pop
+        self.stack2 = []
+
+    def push(self,x):
+        self.stack1.append(x)
+
+    def pop(self):
+        # 当用于pop的栈为空的时候
+        # 将push栈中的元素依次放进pop栈中
+
+        if not self.stack2:
+            while self.stack1:
+                self.stack2.append(self.stack1.pop())
+
+        return self.stack2.pop()
+
+    def peek(self):
+
+        if not self.stack2:
+            while self.stack1:
+                self.stack2.append(self.stack1.pop())
+
+        return self.stack2[-1]
+
+    def isEmpty(self):
+        return not self.stack1 and not self.stack2
+
+  ```
