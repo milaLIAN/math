@@ -149,11 +149,12 @@ if __name__ == '__main__':
 
     ```
 
-- 队列
+- 队列相关
 
   - 使用两个栈形成队列
     - 其中一个栈用于队列出，一个栈用于队列进
     - 其中这两个栈内的数据顺序正好相反
+    - ![Alt text](/resource/queue.jpg)
 
   ```python
   class MyQueue(object):
@@ -187,4 +188,63 @@ if __name__ == '__main__':
     def isEmpty(self):
         return not self.stack1 and not self.stack2
 
+  ```
+
+  - 传土豆/约瑟夫斯问题
+
+    - 在这个游戏中，孩子们围成一圈，并依次尽可能快地传递一个土豆，当停止传递时候，手里有土豆的孩子就要退出游戏。重复上述过程，直到只剩下一个孩子。
+    - ![Alt text](/resource/potato.jpg)
+    - 分析
+      - 传参进入的是人名以及传递土豆的次数
+      - pop()的次数比传递土豆的次数要多 1
+    - 代码详情
+
+      ```python
+      from pythonds import Queue
+
+      def hotPotato(namelist,num):
+         # 首先建立一个队列
+         que = Queue()
+         for name in namelist:
+        # 将所有名字压入队列中
+        que.enqueue(name)
+
+        # 队列中有元素
+        while not que.isEmpty():
+            for i in range(num):
+            # 将队列弹出的元素放在队列的末尾
+            que.enqueue(que.dequeue())
+
+        # dequeue() = num - 1
+        que.dequeue()
+        # 将队列前面的元素弹出
+        return que.dequeue()
+      ```
+
+##### 双端队列
+
+- 双端队列是与队列类似的有序集合。双端队列对在哪一端添加和移除元素没有限制。新元素可以被添加到前端，也可以被添加到后端。双端队列是栈和队列的结合。
+
+  ```python
+  class Deque():
+    def __int__(self):
+        self.iterms = []
+
+    def isEmpty(self):
+        return self.iterms == []
+    # 在前面添加元素
+    def addFront(self,x):
+        self.iterms.append(x)
+    # 在后面添加
+    def ddRear(self,x):
+        self.iterms.index(0,x)
+
+    def removeFront(self):
+        return self.iterms.pop()
+
+    def removeRear(self):
+        return self.iterms.pop(0)
+
+    def size(self):
+        return len(self.iterms)
   ```
